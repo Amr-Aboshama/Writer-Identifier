@@ -2,11 +2,9 @@ import cv2
 import numpy as np
 from copy import deepcopy
 
-################----------------Preprocessing MODULE--------------------####################
 #This function Takes the image and returns its extracted lines
-def preprocessModule(filename):
-    # Read image and convert it to binary
-    img = cv2.imread(filename)
+def preprocessImage(img):
+    # Convert image to binary
 
     image,binarizedImage=crop_text(img) 
     gray_img=deepcopy(image)
@@ -25,7 +23,7 @@ def preprocessModule(filename):
 
     counter = 0
     extractedLines = []
-    extractedLines_gray=[]
+    # extractedLines_gray=[]
 
     # For each array (representing a line) extracted, perform some preprocessing operations
     for arr in (linesArrays):
@@ -34,12 +32,12 @@ def preprocessModule(filename):
             line[line != 0] = 255
             extractedLines.append(line)
             
-            line_gray = gray_img[arr[0]:arr[-1], marginsArrays[0][0]:marginsArrays[-1][-1]]
-            extractedLines_gray.append(line_gray)
+            # line_gray = gray_img[arr[0]:arr[-1], marginsArrays[0][0]:marginsArrays[-1][-1]]
+            # extractedLines_gray.append(line_gray)
             
             counter += 1
 
-    return extractedLines,extractedLines_gray
+    return extractedLines
 
 #This function extracts the text part only from IAM image 
 def crop_text(image):
