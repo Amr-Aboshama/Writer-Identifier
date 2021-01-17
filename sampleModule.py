@@ -1,37 +1,49 @@
-import numpy as np
+from timeit import default_timer as timer
+from trainingModule import *
 import glob
-import time
+import os
 
-#######-------------------------MAIN---------------------------######
-##Global variables
+def readData(dataPath):
+    trainingImages = []
+    trainingLabels = []
+    testImages = []
+    testLabels = []
+    for trainingPath, trainingWriterFolder in enumerate(sorted(glob.glob(dataPath + "/*/"))):
+        trainingFiles = sorted(glob.glob(trainingWriterFolder + "/*.PNG"))
+        trainingImages += trainingFiles
 
-featuresCount = 10 
+        trainingLabels += [trainingPath]*len(trainingFiles)
 
-# create output files
-f = open("results.txt", "w+")
-f.close()
-f = open("time.txt", "w+")
-f.close()
+    testImages = sorted(glob.glob(dataPath + "/*.PNG"))
 
-for TestFolder in sorted(glob.glob("data/*")):
+
+    for i in range(0, len(trainingImages)):
+        trainingImages[i] = cv2.imread(trainingImages[i])
+
+    for i in range(0, len(testImages)):
+        testLabels.append(int(os.path.splitext(os.path.basename(testImages[i]))[0]))
+        testImages[i] = cv2.imread(testImages[i])
+
+    return trainingImages, trainingLabels, testImages, testLabels
+
+
+def trainAndTestSample(dataPath, featuresCount):
+
+    # print('Loading Dataset and Labels...')
+    trainingImages, trainingLabels, testImages, testLabels = readData(dataPath)
+    # print('Finished Loading Dataset and Labels!')
+
+    t0 = timer()
     
-    trainingImagePaths, testingImagePath, trainingLabels = readData(TestFolder)
-   
-    t0 = time.time()
+    # print('Preprocessing and Feature Extraction from Training Data...')
+    xTrain, yTrain = getFeaturesAndLables(trainingImages, trainingLabels, featuresCount)
+    # print('Finished Preprocessing and Feature Extraction from Training Data!')
+    # print('Preprocessing and Feature Extraction from Test Data...')
+    xTest, yTest = getFeaturesAndLables(testImages, testLabels, featuresCount)
+    # print('Finished Preprocessing and Feature Extraction from Test Data!')
     
-    xTrain = np.empty([0, featuresCount])
-    yTrain = []
-    xTest = np.empty([0, featuresCount])
-    featuresVectors = []
-    ImageFeaturesVectors = np.empty([0, featuresCount])
-    testFeaturesVectors = np.empty([0, featuresCount])
+    classification = SVM(xTrain, yTrain, xTest)
     
-    
-    xTrain, yTrain = getTrainingData(trainingImagePaths, trainingLabels, yTrain, ImageFeaturesVectors)
-    
-    xTest= getTestFeatures(testingImagePath, testFeaturesVectors)
-    
-    classification, predictions=SVM(xTrain, yTrain, xTest)
-    
-    t1 = time.time()
-    writeOutput(classification, t1, t0)
+    t1 = timer()
+
+    return round(t1-t0, 2), classification + 1, (classification+1==testLabels[0])
