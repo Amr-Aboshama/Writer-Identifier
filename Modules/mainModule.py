@@ -2,7 +2,7 @@ import os
 from sampleModule import *
 
 featuresCount = 10 
-dataPath = 'data2'
+dataPath = '../data2'
 
 dirs = os.listdir(dataPath)
 

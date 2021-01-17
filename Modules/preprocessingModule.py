@@ -13,7 +13,7 @@ def preprocessImage(img):
 
     # plt.imshow(image,cmap='gray')
     # plt.show()
-    gray_img=deepcopy(image)
+    # gray_img=deepcopy(image)
     image[binarizedImage == 0] = 0
     image[binarizedImage == 255] = 1
   
