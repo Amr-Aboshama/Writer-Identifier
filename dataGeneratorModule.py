@@ -5,7 +5,8 @@ from shutil import copyfile, rmtree
 
 
 
-docs = 10
+docs = 200
+outDirectory = 'data2'
 
 formsFile = open('forms.txt', 'r')
 
@@ -28,13 +29,13 @@ for k, v in writers.items():
     wList.append((k, v))    
 
 
-if os.path.exists('data'):
-    rmtree('data')
+if os.path.exists(outDirectory):
+    rmtree(outDirectory)
 
-os.mkdir('data')
+os.mkdir(outDirectory)
 
 while docs > 0:
-    path = f'data/{docs:04d}' 
+    path = f'{outDirectory}/{docs:04d}' 
     os.mkdir(path)
     w = random.sample(wList, 3)
     k = random.randint(0, 2)
@@ -52,7 +53,7 @@ while docs > 0:
             d = random.sample(w[i][1], 2)
         
         while len(d):
-            # print(f'data[{len(d)}]: {d[-1]}')
+            # print(f'{outDirectory}[{len(d)}]: {d[-1]}')
             copyfile(f'images/{d.pop()}.png', f'{path}/{i+1}/{len(d)+1}.png')
 
     docs -= 1
