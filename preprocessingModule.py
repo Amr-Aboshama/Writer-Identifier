@@ -1,12 +1,18 @@
 import cv2
 import numpy as np
 from copy import deepcopy
+from matplotlib import pyplot as plt
 
 #This function Takes the image and returns its extracted lines
 def preprocessImage(img):
     # Convert image to binary
+    # plt.imshow(img,cmap='gray')
+    # plt.show()
 
     image,binarizedImage=crop_text(img) 
+
+    # plt.imshow(image,cmap='gray')
+    # plt.show()
     gray_img=deepcopy(image)
     image[binarizedImage == 0] = 0
     image[binarizedImage == 255] = 1
@@ -24,7 +30,7 @@ def preprocessImage(img):
     counter = 0
     extractedLines = []
     # extractedLines_gray=[]
-
+   
     # For each array (representing a line) extracted, perform some preprocessing operations
     for arr in (linesArrays):
         if (arr[-1] - arr[0] > 30):
@@ -36,7 +42,7 @@ def preprocessImage(img):
             # extractedLines_gray.append(line_gray)
             
             counter += 1
-
+    #print("extracted lines : ",len(extractedLines))
     return extractedLines
 
 #This function extracts the text part only from IAM image 
@@ -66,7 +72,7 @@ def crop_text(image):
 
     # Create rectangular structuring element and dilate
     blur = cv2.GaussianBlur(gray, (7,7), 0)
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (31,31))
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (40,40))
     dilate = cv2.dilate(thresh[y+h+5:y1,:], kernel, iterations=4)
  
     # Find contours and draw rectangle
