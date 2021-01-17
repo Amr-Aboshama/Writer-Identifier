@@ -1,4 +1,8 @@
 forms.txt
 images
-data
+data*
 .ipynb_checkpoints/preprocess-checkpoint.ipynb
+__pycache__/featuresModule.cpython-37.pyc
+__pycache__/preprocessingModule.cpython-37.pyc
+__pycache__/sampleModule.cpython-37.pyc
+__pycache__/trainingModule.cpython-37.pyc
