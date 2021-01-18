@@ -68,6 +68,7 @@ def crop_text(image):
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (50,50))
     dilate = cv2.dilate(thresh[y+h+5:y1,:], kernel, iterations=4)
     largest=0
+    
     # Find contours and draw rectangle
     cnts = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cnts = cnts[0] if len(cnts) == 2 else cnts[1]

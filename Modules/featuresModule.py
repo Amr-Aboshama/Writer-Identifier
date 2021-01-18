@@ -15,15 +15,6 @@ def LocalBinaryPatternHistogram(image,mask):
   
     return hist
 
-#extract Features from each line
-# def getFeatures(extractedLines, featuresCount):
-#     interword=[]
-#     hist=[]
-#     for img in extractedLines:
-        
-#         hist.append(LocalBinaryPatternHistogram(8,2,img))
-    
-#     return hist
 
 def getFeatures(extractedLines,extractedLines_gray, featuresCount):
     hist=[]

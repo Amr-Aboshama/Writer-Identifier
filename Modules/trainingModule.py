@@ -20,7 +20,8 @@ def getFeaturesAndLables(images, labels, featuresCount):
 # This function applies SVM classifier on test features given training set
 def SVM(xTrain, yTrain, xTest):
     # print('Training SVM Model...')
-    clf = svm.SVC(gamma='scale')
+    # clf = svm.SVC(gamma='scale')
+    clf = svm.SVC(gamma='auto', probability=True, C=5.0)
     clf.fit(xTrain, yTrain)
     # print('Finished Training SVM Model...')
     # print('Predecting Test Results...')
