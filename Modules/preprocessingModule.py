@@ -11,39 +11,32 @@ def preprocessImage(img):
 
     image,binarizedImage=crop_text(img) 
 
-    # plt.imshow(image,cmap='gray')
-    # plt.show()
-    # gray_img=deepcopy(image)
+    gray_img=deepcopy(image)
     image[binarizedImage == 0] = 0
     image[binarizedImage == 255] = 1
-  
-    verticalHistogram = image.sum(axis=1)
-    smallest = int(np.average(verticalHistogram) - np.min(verticalHistogram)) / 4
     
-    linesArrays = splitz(verticalHistogram, int(smallest))
+    # this array contains summation of all *black* pixels on each row of the image
+#     row_hist = np.sum(image < 255, axis=1)
+    row_hist = image.sum(axis=1)
    
-    horizontalHistogram = image.sum(axis=0)
    
-    smallest = int(np.average(horizontalHistogram) - np.min(horizontalHistogram)) / 4
-    marginsArrays = (list(splitz(horizontalHistogram[30:], smallest)))
-
-    counter = 0
-    extractedLines = []
-    # extractedLines_gray=[]
-   
-    # For each array (representing a line) extracted, perform some preprocessing operations
-    for arr in (linesArrays):
-        if (arr[-1] - arr[0] > 30):
-            line = image[arr[0]:arr[-1], marginsArrays[0][0]:marginsArrays[-1][-1]]
-            line[line != 0] = 255
-            extractedLines.append(line)
-            
-            # line_gray = gray_img[arr[0]:arr[-1], marginsArrays[0][0]:marginsArrays[-1][-1]]
-            # extractedLines_gray.append(line_gray)
-            
-            counter += 1
-    #print("extracted lines : ",len(extractedLines))
-    return extractedLines
+    is_lines = row_hist > 5
+    
+    lines = []
+    gray_lines=[]
+    i = 0
+    while i < len(is_lines):
+        if is_lines[i]:
+            begin_row = i
+            lower_bound = max(begin_row - 5, 0)
+            while i < len(is_lines) and is_lines[i]:
+                i += 1
+            upper_bound = min(i + 5, len(is_lines) - 1)
+            if i - begin_row > 50:  # threshold for # of rows to be higher than 20 row
+                lines.append(image[lower_bound:upper_bound, :])
+                gray_lines.append(gray_img[lower_bound:upper_bound, :])
+        i += 1
+    return lines,gray_lines
 
 #This function extracts the text part only from IAM image 
 def crop_text(image):
@@ -72,9 +65,9 @@ def crop_text(image):
 
     # Create rectangular structuring element and dilate
     blur = cv2.GaussianBlur(gray, (7,7), 0)
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (40,40))
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (50,50))
     dilate = cv2.dilate(thresh[y+h+5:y1,:], kernel, iterations=4)
- 
+    largest=0
     # Find contours and draw rectangle
     cnts = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cnts = cnts[0] if len(cnts) == 2 else cnts[1]
@@ -89,15 +82,7 @@ def crop_text(image):
     
     return prepro_img,thresh
 
-# This function splits a sequence of numbers on a given value (smallest)
-def splitz(seq, smallest):
-    group = []
-    for i in range(len(seq)):
-        if (seq[i] >= (smallest)):
-            group.append(i)
-        elif group:
-            yield group
-            group = []
+
 
 #test for preprocessing Module
 # extractedLines,extractedLines_gray=preprocessModule("Test Samples/data/01/1.png")

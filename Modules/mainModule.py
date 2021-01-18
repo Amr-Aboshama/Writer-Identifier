@@ -1,8 +1,8 @@
 import os
 from sampleModule import *
 
-featuresCount = 10 
-dataPath = '../data2'
+featuresCount = 256 
+dataPath = 'data2'
 
 dirs = os.listdir(dataPath)
 

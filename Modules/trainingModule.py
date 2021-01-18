@@ -9,19 +9,13 @@ def getFeaturesAndLables(images, labels, featuresCount):
     yTrain = np.empty((0,0))
     for trainingIndex in range(0, len(images)):
 
-        extractedLines = preprocessImage(images[trainingIndex])
-        featuresVectors = np.array(getFeatures(extractedLines, featuresCount))
+        extractedLines,gray = preprocessImage(images[trainingIndex])
+        featuresVectors = np.array(getFeatures(extractedLines,gray, featuresCount))
         xTrain = np.vstack((xTrain, featuresVectors))
         yTrain = np.append(yTrain, np.full((featuresVectors.shape[0], 1), labels[trainingIndex]))
     
     return xTrain, yTrain
 
-# # This function is used to return test features vectors
-# def getTestFeatures(image, formsFeaturesVectors):
-#     extractedLines = preprocessImage(image)
-#     featuresVectors = np.array(getFeatures(extractedLines))
-#     # formsFeaturesVectors = np.vstack((formsFeaturesVectors, featuresVectors))
-#     return featuresVectors
 
 # This function applies SVM classifier on test features given training set
 def SVM(xTrain, yTrain, xTest):
