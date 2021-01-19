@@ -1,14 +1,18 @@
 import os
+import sys
 import random
 from shutil import copyfile, rmtree
 
+if len(sys.argv) != 4:
+    print('Error in arguments. It expects 3 arguments: <Input-Directory-Path> <Out-Directory-Path> <Documents-Count>')
+    exit()
 
+inputDirectoryPath = sys.argv[1]
+outDirectoryPath = sys.argv[2]
+docs = int(sys.argv[3])
 
-
-docs = 400
-outDirectoryPath = 'data3'
-formsPath = 'forms.txt'
-imagesPath = 'images'
+formsPath = f'{inputDirectoryPath}/forms.txt'
+imagesPath = f'{inputDirectoryPath}/images'
 
 formsFile = open(formsPath, 'r')
 

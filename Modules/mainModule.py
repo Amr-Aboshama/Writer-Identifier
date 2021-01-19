@@ -1,13 +1,21 @@
 import os
+import sys
 from sampleModule import *
 
 featuresCount = 256
-dataPath = '../data3'
+
+
+if len(sys.argv) != 3:
+    print('Error in arguments. It expects 2 arguments: <Input-Data-Path> <Self-Analysis-Mode(0 inactive, otherwise active)>')
+    exit()
+
+dataPath = sys.argv[1]
+selfAnalysisMode = int(sys.argv[2])
 
 dirs = os.listdir(dataPath)
 
 timeFile = open(f'{dataPath}/time.txt', 'w')
-resultFile = open(f'{dataPath}/result.txt', 'w')
+resultFile = open(f'{dataPath}/results.txt', 'w')
 
 total = 0
 pos = 0
@@ -23,7 +31,11 @@ for dir in dirs:
     time += t
     timeFile.write(f'{t}\n')
     resultFile.write(f'{r}\n')
-    print('Sample ', dir, ': ', positive)
+    if selfAnalysisMode:
+        print('Sample ', dir, ': ', positive)
+    else:
+        print('Sample ', dir, ': Done')
 
-print('Accuracy = ', pos*100/total, '%')
+if selfAnalysisMode:
+    print('Accuracy = ', pos*100/total, '%')
 print('Total Time = ', time, ' seconds')

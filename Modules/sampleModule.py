@@ -21,7 +21,12 @@ def readData(dataPath):
         trainingImages[i] = cv2.imread(trainingImages[i])
 
     for i in range(0, len(testImages)):
-        testLabels.append(int(os.path.splitext(os.path.basename(testImages[i]))[0]))
+        label = os.path.splitext(os.path.basename(testImages[i]))[0]
+        if label.isdigit():
+            label = int(label)
+        else:
+            label = 0
+        testLabels.append(label)
         testImages[i] = cv2.imread(testImages[i])
 
     return trainingImages, trainingLabels, testImages, testLabels
