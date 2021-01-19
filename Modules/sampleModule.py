@@ -42,8 +42,8 @@ def trainAndTestSample(dataPath, featuresCount):
     xTest, yTest = getFeaturesAndLables(testImages, testLabels, featuresCount)
     # print('Finished Preprocessing and Feature Extraction from Test Data!')
     
-    classification = SVM(xTrain, yTrain, xTest)
+    classification, positive = SVM(xTrain, yTrain, xTest, yTest)
     
     t1 = timer()
 
-    return round(t1-t0, 2), classification + 1, (classification+1==testLabels[0])
+    return round(t1-t0, 2), classification, positive
