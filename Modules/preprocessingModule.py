@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-from copy import deepcopy
 from matplotlib import pyplot as plt
 
 #This function Takes the image and returns its extracted lines
@@ -13,15 +12,11 @@ def preprocessImage(img, scale_perc= 0.45):
     w = int(img.shape[1] * scale_perc)
     img = cv2.resize(img, (w, h))
 
-    image,binarizedImage=crop_text(img, scale_perc) 
-
-    gray_img=deepcopy(image)
-    image[binarizedImage == 0] = 0
-    image[binarizedImage == 255] = 1
+    gray_img,binarizedImage=crop_text(img, scale_perc) 
+    
     
     # this array contains summation of all *black* pixels on each row of the image
-#     row_hist = np.sum(image < 255, axis=1)
-    row_hist = image.sum(axis=1)
+    row_hist = binarizedImage.sum(axis=1)
    
    
     is_lines = row_hist > 5
@@ -37,7 +32,7 @@ def preprocessImage(img, scale_perc= 0.45):
                 i += 1
             upper_bound = min(i + 5, len(is_lines) - 1)
             if i - begin_row > 50 *scale_perc:  # threshold for # of rows to be higher than 20 row
-                lines.append(image[lower_bound:upper_bound, :])
+                lines.append(binarizedImage[lower_bound:upper_bound, :])
                 gray_lines.append(gray_img[lower_bound:upper_bound, :])
         i += 1
     return lines,gray_lines
@@ -84,7 +79,8 @@ def crop_text(image, scale_perc):
     cv2.rectangle(blur,(xf,yf),(xf+wf,yf+hf),(0,255,0),2) 
     prepro_img=blur[yf:yf+hf, xf:xf+wf]
     thresh = cv2.threshold(prepro_img, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
-    
+
+    thresh[thresh == 255] = 1
     return prepro_img,thresh
 
 
