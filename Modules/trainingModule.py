@@ -29,16 +29,10 @@ def SVM(xTrain, yTrain, xTest, yTest):
     # print('Finished Training SVM Model...')
     # print('Predecting Test Results...')
     predictions = clf.predict(xTest)
-    positiveCount = (predictions+1 == yTest).sum()
 
     # print('Finished Predecting Test Results...')
     uniquePredictions, uniquePredictionsCount = np.unique(predictions, return_counts=True)
-
     classification = uniquePredictions[np.argmax(uniquePredictionsCount)]
-    result = False
+    positive = (classification + 1 == yTest[0])
 
-    if uniquePredictionsCount.max() <= positiveCount:
-        classification = yTest[0] - 1
-        result = True
-
-    return int(classification + 1), result
+    return int(classification + 1), positive
