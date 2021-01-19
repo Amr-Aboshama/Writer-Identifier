@@ -5,8 +5,8 @@ from sklearn import svm
 # This function returns training features and corresponding labels of all test case
 def getFeaturesAndLables(images, labels, featuresCount):
     
-    xTrain = np.empty((0, featuresCount))
-    yTrain = np.empty(0)
+    xMatrix = np.empty((0, featuresCount))
+    yVector = np.empty(0)
     for trainingIndex in range(0, len(images)):
 
         extractedLines,gray = preprocessImage(images[trainingIndex])
@@ -15,10 +15,10 @@ def getFeaturesAndLables(images, labels, featuresCount):
 
         featuresVectors = np.array(getFeatures(extractedLines,gray, featuresCount))
 
-        xTrain = np.vstack((xTrain, featuresVectors))
-        yTrain = np.append(yTrain, np.full(featuresVectors.shape[0], labels[trainingIndex]))
+        xMatrix = np.vstack((xMatrix, featuresVectors))
+        yVector = np.append(yVector, np.full(featuresVectors.shape[0], labels[trainingIndex]))
     
-    return xTrain, yTrain
+    return xMatrix, yVector
 
 
 # This function applies SVM classifier on test features given training set
