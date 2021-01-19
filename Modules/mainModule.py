@@ -12,7 +12,14 @@ if len(sys.argv) != 3:
 dataPath = sys.argv[1]
 selfAnalysisMode = int(sys.argv[2])
 
-dirs = os.listdir(dataPath)
+dirs = []
+
+tmpDirs = os.listdir(dataPath)
+for dir in tmpDirs:
+    if os.path.isdir(os.path.join(dataPath, dir)):
+        dirs.append(dir)
+
+dirs.sort(key=lambda x: int(x))
 
 timeFile = open(f'{dataPath}/time.txt', 'w')
 resultFile = open(f'{dataPath}/results.txt', 'w')
@@ -22,9 +29,6 @@ pos = 0
 time = 0
 
 for dir in dirs:
-    if not os.path.isdir(os.path.join(dataPath, dir)):
-        continue
-    
     total += 1
     t, r, positive = trainAndTestSample(f'{dataPath}\\{dir}', featuresCount)
     pos += positive
