@@ -10,7 +10,11 @@ def getFeaturesAndLables(images, labels, featuresCount):
     for trainingIndex in range(0, len(images)):
 
         extractedLines,gray = preprocessImage(images[trainingIndex])
+        if len(extractedLines) == 0:
+            extractedLines,gray = preprocessImage(images[trainingIndex], 1.0)
+
         featuresVectors = np.array(getFeatures(extractedLines,gray, featuresCount))
+
         xTrain = np.vstack((xTrain, featuresVectors))
         yTrain = np.append(yTrain, np.full((featuresVectors.shape[0], 1), labels[trainingIndex]))
     
@@ -21,7 +25,7 @@ def getFeaturesAndLables(images, labels, featuresCount):
 def SVM(xTrain, yTrain, xTest):
     # print('Training SVM Model...')
     # clf = svm.SVC(gamma='scale')
-    clf = svm.SVC(gamma='auto', probability=True, C=5.0)
+    clf = svm.SVC(kernel='poly', gamma='auto', probability=True, C=3.0, degree = 2)
     clf.fit(xTrain, yTrain)
     # print('Finished Training SVM Model...')
     # print('Predecting Test Results...')
